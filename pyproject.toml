@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hh4b_transformer"
+version = "0.0.1"
+description = "Transformer-based training for HH4b analysis"
+readme = "README.md"
+requires-python = ">=3.9"
+keywords = ["hep", "hh4b", "transformer", "coffea"]
+authors = [{ name = "HH4b Team" }]
+dependencies = [
+  "numpy",
+  "pandas",
+  "pyarrow",
+  "tqdm",
+  # Choose your ML stack; keep minimal here
+  "torch>=2.1; platform_system != 'Windows'",
+  "onnxruntime>=1.17",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "black", "ruff", "pre-commit"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+src = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra"]

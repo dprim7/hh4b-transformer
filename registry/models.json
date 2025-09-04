@@ -1,0 +1,8 @@
+{
+  "example": {
+    "artifact": "artifacts/example/model.onnx",
+    "features": "v1",
+    "hh4b_commit": "",
+    "data_tag": "24Sep25_v12v2_private_signal"
+  }
+}

@@ -1,0 +1,17 @@
+# Feature specification
+version: "v1"
+inputs:
+  - MET_pt
+  - bbFatJetPt0
+  - bbFatJetPt1
+  - bbFatJetEta0
+  - bbFatJetEta1
+  - bbFatJetParTmassVis0
+  - bbFatJetParTmassVis1
+  - VBFjjMass
+  - VBFjjDeltaEta
+  # Add more per-event or per-jet features as needed
+
+targets:
+  task: "binary"       # hh4b vs background
+weight_key: "finalWeight"

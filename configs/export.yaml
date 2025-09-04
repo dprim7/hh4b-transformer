@@ -1,0 +1,6 @@
+# Export configuration
+format: "onnx"   # or torchscript
+opset: 17
+metadata:
+  author: "HH4b Team"
+  description: "Transformer for HH4b scoring"

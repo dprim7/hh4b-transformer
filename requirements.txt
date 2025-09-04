@@ -1,0 +1,6 @@
+numpy
+pandas
+pyarrow
+tqdm
+torch>=2.1; platform_system != 'Windows'
+onnxruntime>=1.17

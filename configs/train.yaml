@@ -1,0 +1,14 @@
+# Training configuration
+seed: 42
+optimizer:
+  name: adamw
+  lr: 3e-4
+  weight_decay: 0.01
+scheduler:
+  name: cosine
+  warmup_steps: 1000
+train:
+  batch_size: 1024
+  max_steps: 100000
+  log_every: 100
+  eval_every: 2000

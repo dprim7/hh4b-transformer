@@ -1,0 +1,8 @@
+# Model hyperparameters
+model:
+  name: "particle-transformer"
+  d_model: 128
+  n_heads: 4
+  n_layers: 4
+  dropout: 0.1
+  pooling: "cls"

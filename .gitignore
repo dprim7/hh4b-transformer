@@ -1,0 +1,25 @@
+# Artifacts and caches
+artifacts/
+outputs/
+wandb/
+.lightning/
+*.pt
+*.onnx
+*.ckpt
+*.pth
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+
+# Local datasets (keep data outside repo; config points to it)
+.data/
+
+# OS/editor
+.DS_Store
+*.swp
+
+PLAN.md

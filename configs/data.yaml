@@ -1,0 +1,13 @@
+# Data configuration
+hh4b_commit: ""
+data_root: "${HH4B_DATA_ROOT}"
+tag: "24Sep25_v12v2_private_signal"
+years: ["2022", "2022EE", "2023", "2023BPix"]
+txbb_version: "glopart-v2"  # or pnet-legacy
+bdt_version: "25Feb5_v13_glopartv2_rawmass"
+load_systematics: false
+reorder_txbb: true
+splits:
+  val_fraction: 0.1
+  test_fraction: 0.1
+  stratify: true
