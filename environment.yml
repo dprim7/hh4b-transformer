@@ -1,0 +1,27 @@
+name: hh4b
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pytorch>=2.3
+  - pytorch-cuda=12.1  
+  - numpy
+  - pandas
+  - pyarrow
+  - scikit-learn
+  - pyyaml
+  - onnxruntime
+  - pip
+  - pip:
+      - tqdm
+      - einops
+      - pytest
+      - pre-commit
+  # dev tools (optional):
+  # - black
+  # - ruff
+  # - pytest-cov
+
+
