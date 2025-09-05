@@ -1,4 +1,4 @@
-name: hh4b
+name: hh4b-part
 channels:
   - pytorch
   - nvidia

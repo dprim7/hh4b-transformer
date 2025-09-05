@@ -1,6 +1,6 @@
-# registry
+# Registry
 
-Stores lightweight metadata mapping model tags to exported artifacts and their feature/data provenance. This is optional, but useful to make inference in `HH4b` reproducible.
+Stores lightweight metadata mapping model tags to exported artifacts and their feature/data provenance. Useful to make inference in `HH4b` reproducible.
 
 Example `models.json` entry:
 ```json

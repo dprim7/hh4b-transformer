@@ -22,4 +22,6 @@ __pycache__/
 .DS_Store
 *.swp
 
-
+*.egg-info/
+agent-context.md
+docs/notes.md

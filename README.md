@@ -8,15 +8,36 @@ A lightweight, experiment-focused repository for training transformer-based mode
 - Export CPU-friendly models (TorchScript/ONNX) for downstream inference in `HH4b`.
 - Track features and model metadata for reproducibility.
 
+Details about Data, Architecure, Features etc. can be found in [PLAN.md](docs/PLAN.md)
+
+
+# Development
+
+## Virtual Environment for Development
+
+Create and activate virtual environment, install repo as package, install pre-commit.
+First time install, in order:
+```
+micromamba create -n hh4b-part -f environment.yml -y
+micromamba activate hh4b-part
+python -m pip install -e .
+pre-commit install 
+```
+Activate the micromamba environment in each new session.
+
 ## Data expectations
 - Data lives outside this repo. Expected structure (as produced by `HH4b`):
 ```
 <data_root>/<year>/<sample>/{parquet,pickles}/...
 ```
-- Example path you shared:
+- Example path:
 ```
-/ceph/cms/store/user/cmantill/bbbb/skimmer/24Sep25_v12v2_private_signal/2023BPix/JetMET_Run2023D/parquet/out_55.parquet
+/ceph/cms/store/user/dprimosc/bbbb/skimmer/24Sep25_v12v2_private_signal/2023BPix/JetMET_Run2023D/parquet/out_55.parquet
 ```
+or on pvc:
+```
+```
+
 
 ## Design choices (reasoning)
 - Separate repo: isolates ML deps, accelerates iteration, simplifies CI.

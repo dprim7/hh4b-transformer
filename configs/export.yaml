@@ -3,4 +3,4 @@ format: "onnx"   # or torchscript
 opset: 17
 metadata:
   author: "HH4b Team"
-  description: "Transformer for HH4b scoring"
+  description: "Transformer for HH4b discrimination and HH mass regression"
