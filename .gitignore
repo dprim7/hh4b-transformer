@@ -23,5 +23,18 @@ __pycache__/
 *.swp
 
 *.egg-info/
+
+# Development environments
+venv/
+.venv/
+env/
+.env/
+.vscode/
+
+# IDE and development artifacts
 agent-context.md
 docs/notes.md
+
+.cursorrules
+scripts/activate_env.sh
+docs/development-setup.md

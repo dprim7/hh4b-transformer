@@ -44,6 +44,7 @@ class TransformerBlock(nn.Module):
             nn.GELU(),
             nn.Dropout(dropout),
             nn.Linear(4 * d_model, d_model),
+            nn.LayerNorm(d_model),
         )
         self.ffn_dropout = nn.Dropout(dropout)
         self.norm1 = nn.LayerNorm(d_model)
