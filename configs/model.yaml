@@ -1,8 +1,10 @@
 # Model hyperparameters
 model:
-  name: "particle-transformer"
+  name: "hh4b-transformer"
   d_model: 128
-  n_heads: 4
+  n_heads: 8
+  n_part_attn_blocks: 6
+  n_class_attn_blocks: 2
   n_layers: 4
   dropout: 0.1
   pooling: "cls"

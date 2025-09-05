@@ -1,4 +1,4 @@
-# Jet-less Transformer for HH->4b Analysis with LHC Run 2 and Run 3 Data
+# Jet-free Transformer for HH->4b Analysis with LHC Run 2 and Run 3 Data
 
 ## TODO
 
@@ -11,6 +11,7 @@
 - [ ] Create configurable model with callbacks (include WandB for tracking)
 - [ ] Create mock training data & unit/integration tests
 - [ ] Create trainer
+- [ ] Create inference module
 - [ ] Create/integrate evaluation plots
 - [ ] Implement training on 4 GPUs
 
@@ -24,8 +25,9 @@
 - Qu, H., Li, C., and Qian, S. (2024) *Particle Transformer for Jet Tagging*. [arXiv:2202.03772v3](https://arxiv.org/pdf/2202.03772)
 
 ### Original ParT Architecture (with Jets)
+This implementation removes jets and has 8 overall attention blocks instead of 6 + 2 particle/class blocks
 
-<img src="figures/arch.png" alt="Architecture" width="600" title="Architecture diagram">
+<img src="figures/legacy-arch.png" alt="Legacy architecture" width="600" title="Legacy architecture diagram">
 
 ## Hyperparameters
 
@@ -58,7 +60,7 @@ Multiclass classifier. 136 signal classes (?) with discretized (m_h1, m_h2), BG 
  * ZH
 
  ## Inputs 
-3 synched input streams (JetClass-II data format)
+single particle-candidate stream with masking
 
  **Particle Features:**
 
@@ -93,10 +95,7 @@ Variable standardization employs manually optimized parameters: logarithmic pT a
   * All generated samples used
   * Total Events: 140 M
 
-  ## Jet Taggers
-    (these are only used for the baseline analyses?)
-  * **Sophon**: fat-jet X->bb tagger
-  * **SophonAK4**: AK4 b-tagger
+
 
 
 

@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Literal
 
-import numpy as np
-import torch
+import numpy as np  # type: ignore
+import torch  # type: ignore
 
 # TODO: REVIEW
 
-def predict_torchscript(model_path: str | Path, X: np.ndarray, batch_size: int = 4096) -> np.ndarray:
+
+def predict_torchscript(
+    model_path: str | Path, X: np.ndarray, batch_size: int = 4096
+) -> np.ndarray:
     m = torch.jit.load(str(model_path), map_location="cpu").eval()
     outs = []
     for i in range(0, len(X), batch_size):
@@ -21,7 +23,7 @@ def predict_torchscript(model_path: str | Path, X: np.ndarray, batch_size: int =
 
 
 def predict_onnx(model_path: str | Path, X: np.ndarray, batch_size: int = 4096) -> np.ndarray:
-    import onnxruntime as ort
+    import onnxruntime as ort  # type: ignore
 
     sess = ort.InferenceSession(str(model_path))
     outs = []

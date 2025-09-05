@@ -4,11 +4,14 @@ import json
 from pathlib import Path
 from typing import Any, Dict
 
-import torch
+import torch  # type: ignore
 
 # TODO: REVIEW
 
-def export_torchscript(model: torch.nn.Module, example: torch.Tensor, out_path: str | Path, meta: Dict[str, Any]) -> Path:
+
+def export_torchscript(
+    model: torch.nn.Module, example: torch.Tensor, out_path: str | Path, meta: Dict[str, Any]
+) -> Path:
     model.eval()
     ts = torch.jit.trace(model, example)
     out_path = Path(out_path)
@@ -17,7 +20,13 @@ def export_torchscript(model: torch.nn.Module, example: torch.Tensor, out_path: 
     return out_path
 
 
-def export_onnx(model: torch.nn.Module, example: torch.Tensor, out_path: str | Path, meta: Dict[str, Any], opset: int = 17) -> Path:
+def export_onnx(
+    model: torch.nn.Module,
+    example: torch.Tensor,
+    out_path: str | Path,
+    meta: Dict[str, Any],
+    opset: int = 17,
+) -> Path:
     model.eval()
     out_path = Path(out_path)
     torch.onnx.export(
