@@ -3,15 +3,15 @@
 ## TODO
 
 - [x] Figure out which data format to copy to pvc: compressed parquet (already sharded)
-- [ ] Create PVC on Nautilus (or use existing)
-- [ ] Current pvc has only 0.5 TB, estimate how much we'd need
+- [x] Create PVC on Nautilus
+- [x] Current pvc has only 0.5 TB, estimate how much we'd need: likely 1TB, use 2 TB to be safe (partial run3 wihtout 2024 has 200G)
 - [ ] Create preprocessing to prepare files for PVC (no selections, just cleaning)
 - [ ] Get/generate Run 2 data + any missing samples
 - [ ] Move run 2 and run 3 data to pvc
-- [ ] Create configurable model with callbacks (include WandB for tracking)
+- [x] Create model classes for HH4bTransformer + unit tests
 - [ ] Create mock training data & unit/integration tests
-- [ ] Create trainer
-- [ ] Create inference module
+- [ ] Create trainer with callbacks (include Tensorboard + WandB for tracking) + unit tests
+- [ ] Create inference module + unit tests
 - [ ] Create/integrate evaluation plots
 - [ ] Implement training on 4 GPUs
 
@@ -63,19 +63,21 @@ This implementation removes jets and has 8 overall attention blocks instead of 6
  * ZH
 
  ## Inputs 
-single particle-candidate stream with masking
+Single particle-candidate stream with masking
 
  **Particle Features:**
 
  up to 256 particles
   * Kinematic Variables:  ln(pT), ln(E), ln(pT^rel), ln(E^rel), ∆R, ∆η, ∆φ, η, φ
   * Track parameters: d0, d0^err, dz, dz^err  (hyperbolic tangent transformation for impact params (?))
-  * Particle ID: Binary flags for charged hadrons, neutrol hadrons, photons, electrons, muons, continuous charge information (?)
+  * Particle ID: Binary flags for charged hadrons, neutral hadrons, photons, electrons, muons, continuous charge information (?)
 
 Variable standardization employs manually optimized parameters: logarithmic pT and energy variables are centered at 1.7 and 2.0 respectively with scale factors of 0.7, while relative momentum variables are centered at −4.7 with identical scaling. Angular variables use specialized normalization with ∆R centered at 0.2 and scaled by 4.0.
 
 **Lorentz vectors:**
  * (px, py, pz, E) for each particle
+
+    *TODO:* check if this is just concatenated with other features
 
 **Paricle masks:**
  * binary masks to distinguish genuine particles from zero padding
