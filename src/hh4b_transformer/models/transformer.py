@@ -12,17 +12,9 @@ class TransformerBlock(nn.Module):
     x: Tensor of shape (batch, length, d_model)
     key_padding_mask: Boolean mask of shape (batch, length)
         True marks padding tokens to be ignored by attention.
-    pair_feats: Optional pairwise features used as additive attention bias.
+    pair_bias: Optional pairwise features used as additive attention bias.
         Shape (batch, length, length, K) or (batch, length-1, length-1, K) if CLS
         is omitted; projected to per-head biases internally.
-
-    Behavior
-    --------
-    - LayerNorm → multi-head scaled dot-product attention (+ optional pairwise bias)
-      → residual add.
-    - LayerNorm → 2-layer MLP with GELU and dropout → residual add.
-    - d_model must be divisible by n_heads; head_dim = d_model // n_heads.
-    - Dropout is applied to attention probabilities and MLP activations in train mode.
 
     Outputs
     -------
@@ -77,7 +69,7 @@ class TransformerBlock(nn.Module):
     def forward(
         self,
         x: torch.Tensor,
-        key_padding_mask: torch.Tensor | None = None,
+        key_padding_mask: torch.Tensor,
         pair_feats: torch.Tensor | None = None,
     ) -> torch.Tensor:
         # Pre-norm attention
