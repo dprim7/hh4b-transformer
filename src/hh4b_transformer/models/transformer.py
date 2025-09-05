@@ -5,13 +5,37 @@ import torch.nn as nn  # type: ignore
 
 
 class TransformerBlock(nn.Module):
+    """Particle-level transformer block.
+
+    Inputs
+    ------
+    x: Tensor of shape (batch, length, d_model)
+    key_padding_mask: Boolean mask of shape (batch, length)
+        True marks padding tokens to be ignored by attention.
+    pair_feats: Optional pairwise features used as additive attention bias.
+        Shape (batch, length, length, K) or (batch, length-1, length-1, K) if CLS
+        is omitted; projected to per-head biases internally.
+
+    Behavior
+    --------
+    - LayerNorm → multi-head scaled dot-product attention (+ optional pairwise bias)
+      → residual add.
+    - LayerNorm → 2-layer MLP with GELU and dropout → residual add.
+    - d_model must be divisible by n_heads; head_dim = d_model // n_heads.
+    - Dropout is applied to attention probabilities and MLP activations in train mode.
+
+    Outputs
+    -------
+    y: Tensor of shape (batch, length, d_model)
+    """
+
     def __init__(
         self,
         d_model: int,
         n_heads: int,
         dropout: float,
-        use_pair_bias: bool = True,
-        pair_bias_dim: int = 256,
+        use_pair_bias: bool,
+        pair_bias_dim: int,
     ):
         super().__init__()
         self.d_model = d_model
@@ -142,7 +166,7 @@ class HH4bTransformer(nn.Module):
     Inputs
     ------
     x: Tensor of shape (batch, num_particles, feature_dim)
-    mask: Optional boolean mask of shape (batch, num_particles)
+    mask: Boolean mask of shape (batch, num_particles)
     attention_bias: Optional tensor of shape (batch, num_particles, num_particles)
 
     Outputs
@@ -152,7 +176,7 @@ class HH4bTransformer(nn.Module):
 
     def __init__(
         self,
-        in_dim: int,
+        feature_dim: int = 23,  # TODO: check this
         d_model: int = 256,  # embedding space
         n_heads: int = 16,
         n_layers: int = 8,
@@ -160,16 +184,16 @@ class HH4bTransformer(nn.Module):
         dropout: float = 0.1,
         pooling: str = "cls",
         num_classes: int = 138,
-        use_pair_bias: bool = False,
+        use_pair_bias: bool = True,
         pair_bias_dim: int = 256,
     ):
         super().__init__()
         self.embed = nn.Sequential(
-            nn.Linear(in_dim, d_model),
+            nn.Linear(feature_dim, d_model),
             nn.GELU(),
             nn.Dropout(dropout),
         )
-        self.cls_token = nn.Parameter(torch.zeros(1, 1, d_model))
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, d_model))  # is this present in the paper?
         self.blocks = nn.ModuleList(
             [
                 TransformerBlock(
@@ -185,7 +209,7 @@ class HH4bTransformer(nn.Module):
         self.norm = nn.LayerNorm(d_model)
         self.pooling = pooling
         self.num_classes = num_classes
-        # Classification head: MLP(d_model → mlp_dim → num_classes)
+
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(d_model),
             nn.Linear(d_model, mlp_dim),
@@ -207,14 +231,12 @@ class HH4bTransformer(nn.Module):
         cls = self.cls_token.expand(batch_size, -1, -1)
         x = torch.cat([cls, x], dim=1)
 
-        key_padding_mask: torch.Tensor | None = None
-        if mask is not None:
-            # mask: True for valid tokens; MultiheadAttention expects True for padding positions.
-            # Build key_padding_mask of shape (B, 1 + N)
-            pad = ~mask.bool()
-            key_padding_mask = torch.cat(
-                [torch.zeros((batch_size, 1), dtype=torch.bool, device=x.device), pad], dim=1
-            )
+        # mask: True for valid tokens; MultiheadAttention expects True for padding positions.
+        # Build key_padding_mask of shape (B, 1 + N_particles)
+        pad = ~mask.bool()
+        key_padding_mask = torch.cat(
+            [torch.zeros((batch_size, 1), dtype=torch.bool, device=x.device), pad], dim=1
+        )  # cls is always valid, so all zeros for zeroth position of the maks
 
         for block in self.blocks:
             x = block(x, key_padding_mask, attention_bias)
@@ -224,15 +246,14 @@ class HH4bTransformer(nn.Module):
         if self.pooling == "cls":
             pooled = x[:, 0]
         else:
-            if mask is None:
-                pooled = x[:, 1:].mean(dim=1)
-            else:
-                valid = mask.float().clamp(min=0.0, max=1.0)
-                summed = (x[:, 1:] * valid.unsqueeze(-1)).sum(dim=1)
-                denom = valid.sum(dim=1).clamp(min=1.0)
-                pooled = summed / denom.unsqueeze(-1)
+            valid = mask.float().clamp(min=0.0, max=1.0)
+            summed = (x[:, 1:] * valid.unsqueeze(-1)).sum(dim=1)
+            denom = valid.sum(dim=1).clamp(min=1.0)
+            pooled = summed / denom.unsqueeze(-1)
 
         logits = self.mlp_head(pooled)
+
+        # softmax not needed for training?
 
         return logits
 

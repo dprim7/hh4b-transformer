@@ -19,7 +19,7 @@
 
 # Notes
 
-### References
+### Useful References
 
 - Yang, T. and Li, C. (2025). *Potential of di-Higgs observation via a calibratable jet-free HH → 4b framework*. [arXiv:2508.15048](https://arxiv.org/pdf/2508.15048)
 - Qu, H., Li, C., and Qian, S. (2024) *Particle Transformer for Jet Tagging*. [arXiv:2202.03772v3](https://arxiv.org/pdf/2202.03772)
@@ -34,16 +34,19 @@ This implementation removes jets and has 8 overall attention blocks instead of 6
 **Architecture:**
  * Attention Layers: 8 
  * Embedding Dimension: 256
- * Attention Heads: 16 (double check, thought it was 8 in other paper)
+ * Attention Heads: 16 
  * Final MLP: one hidden layer with 1024 units
- * Softmax over classes
+ * Output head: 138 dim classification head with softmax
 
  **Regularization:** 
  * Dropout: 0.1
 
  ## Task
 
-Multiclass classifier. 136 signal classes (?) with discretized (m_h1, m_h2), BG classes: (136 QCD, 137 ttbar)(where are the others included?). Double check this 
+138-dimensional classifier. 136 signal classes with discretized (m_h1, m_h2), BG classes: QCD (i=136), ttbar (i=137)
+
+**Label construction:** 
+136 dim signal classification uses conditional logic mapping from generator level Higgs masses to discrete class indices (how?)
  
  ### Produce: 
  * mass de-correlated HH discriminant

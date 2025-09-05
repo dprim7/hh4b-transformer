@@ -7,9 +7,10 @@ import numpy as np
 import torch
 from sklearn.metrics import roc_auc_score
 
-from hh4b_transformer.models.transformer import SimpleTransformer
+from hh4b_transformer.models.transformer import HH4bTransformer
 
 # TODO: REVIEW
+
 
 def main() -> None:
     p = argparse.ArgumentParser()
@@ -21,15 +22,17 @@ def main() -> None:
     X = np.load(args.x)
     y = np.load(args.y)
 
-    model = SimpleTransformer(in_dim=X.shape[1])
+    model = HH4bTransformer(in_dim=X.shape[1])
     state = torch.load(args.ckpt, map_location="cpu")
     model.load_state_dict(state)
     model.eval()
 
+    # output of HH4bTransformer is a 138-dim vector of logits
     with torch.no_grad():
         logits = model(torch.from_numpy(X).float()).numpy()
         prob = 1 / (1 + np.exp(-logits))
 
+    # need different evals & metrics
     auc = roc_auc_score(y, prob)
     print(f"ROC AUC: {auc:.4f}")
     Path("outputs").mkdir(exist_ok=True)
