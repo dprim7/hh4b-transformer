@@ -5,7 +5,7 @@ A lightweight repository for training transformer-based models for the HH→4b a
 
 Details about Data, Architecture, Features etc. can be found in the [overview](docs/overview.md#notes).
 
-For tasks that yet to be completed,  see the list of [TODOs](docs/overview.md#TODO).
+For tasks that are yet to be completed,  see the list of [TODOs](docs/overview.md#TODO).
 
 # Development
 
